@@ -61,7 +61,7 @@ services:
     container_name: discord-alerts
     restart: unless-stopped
     environment:
-      - DISCORD_WEBHOOK=${VAR_DISCORD_WEBHOK}
+      - DISCORD_WEBHOOK=${VAR_DISCORD_WEBHOOK}
 
   blackbox_exporter:
     image: prom/blackbox-exporter
@@ -71,9 +71,9 @@ services:
     ports:
       - "9115:9115"
     volumes:
-      - "./config:/config"
+      - "./blackbox:/config"
     command:
-      - '--config.file=/blackbox/blackbox.yml'
+      - '--config.file=/config/blackbox.yml'
   alertmanager:
     image: prom/alertmanager:v0.21.0
     container_name: alertmanager

@@ -1,6 +1,5 @@
 global:
 
-
 route:
   receiver: discord_webhook
   group_interval: 15s

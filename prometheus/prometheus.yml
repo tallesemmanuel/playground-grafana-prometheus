@@ -29,11 +29,11 @@ scrape_configs:
         module: [http_2xx]
     static_configs:
         - targets:
-          - https://uol.com.br
+          - https://www.uol.com.br
           - https://google.com
-          - https://github.com
-          - https://linkedin.com
-          - https://globo.com
+          - https://github.com/
+          - https://www.linkedin.com/
+          - https://www.globo.com/
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
