@@ -10,8 +10,8 @@ services:
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_GRAFANA_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=${ADMIN_GRAFANA_USER}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_AUTH_PROXY_ENABLED=true
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
