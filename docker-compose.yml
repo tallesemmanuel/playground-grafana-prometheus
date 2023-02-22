@@ -75,7 +75,7 @@ services:
     command:
       - '--config.file=/config/blackbox.yml'
   alertmanager:
-    image: prom/alertmanager:v0.21.0
+    image: prom/alertmanager:v0.25.0
     container_name: alertmanager
     restart: unless-stopped
     command:
