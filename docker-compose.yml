@@ -13,6 +13,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_PROXY_ENABLED=true
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     restart: unless-stopped
     expose:
@@ -26,6 +27,7 @@ services:
     volumes:
       - ./prometheus:/etc/prometheus
       - ./prometheus_data:/prometheus
+      - ./prometheus/alerts.rules.yaml:/etc/prometheus/alerts.rules
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -54,3 +56,31 @@ services:
     restart: unless-stopped
     expose:
       - 9100
+  discord-alerts:
+    image: benjojo/alertmanager-discord
+    container_name: discord-alerts
+    restart: unless-stopped
+    environment:
+      - DISCORD_WEBHOOK=${VAR_DISCORD_WEBHOK}
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter
+    container_name: blackbox
+    dns: 8.8.8.8
+    restart: always
+    ports:
+      - "9115:9115"
+    volumes:
+      - "./config:/config"
+    command:
+      - '--config.file=/blackbox/blackbox.yml'
+  alertmanager:
+    image: prom/alertmanager:v0.21.0
+    container_name: alertmanager
+    restart: unless-stopped
+    command:
+      - "--config.file=/prometheus/alertmanager.yaml"
+    volumes:
+      - "./alertmanager/alertmanager.yaml:/prometheus/alertmanager.yaml"
+    ports:
+      - "9093:9093"
