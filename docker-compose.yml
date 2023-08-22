@@ -9,12 +9,16 @@ services:
       - ./grafana_data:/var/lib/grafana
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - /home/ubuntu/ssl:/etc/grafana/certs
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_GRAFANA_PASSWORD}
       - GF_SECURITY_ADMIN_USER=${ADMIN_GRAFANA_USER}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_AUTH_PROXY_ENABLED=true
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SERVER_HTTPS= "true"
+      - GF_SERVER_CERT_FILE= /home/ubuntu/ssl/certificado.crt  # Substitua pelo caminho real
+      - GF_SERVER_CERT_KEY= /home/ubuntu/ssl/chave-privada.key
     restart: unless-stopped
     expose:
       - "3000"
@@ -56,12 +60,12 @@ services:
     restart: unless-stopped
     expose:
       - 9100
-  discord-alerts:
-    image: benjojo/alertmanager-discord
-    container_name: discord-alerts
-    restart: unless-stopped
-    environment:
-      - DISCORD_WEBHOOK=${VAR_DISCORD_WEBHOOK}
+        #  discord-alerts:
+        # image: benjojo/alertmanager-discord
+        # container_name: discord-alerts
+        # restart: unless-stopped
+        # environment:
+        # - DISCORD_WEBHOOK=${VAR_DISCORD_WEBHOOK}
 
   blackbox_exporter:
     image: prom/blackbox-exporter
@@ -84,3 +88,14 @@ services:
       - "./alertmanager/alertmanager.yaml:/prometheus/alertmanager.yaml"
     ports:
       - "9093:9093"
+  calert:
+    container_name: calert
+    image: ghcr.io/mr-karan/calert:latest
+    ports:
+      - 6000:6000
+    command:
+      - "--config=./config.toml"
+    volumes:
+      - ./config.toml:/app/config.toml
+      - ./message.tmpl:/app/static/message.tmpl
+    restart: unless-stopped

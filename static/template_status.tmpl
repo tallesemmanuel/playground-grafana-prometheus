@@ -1,0 +1,4 @@
+{{ define "customStatus" -}}
+{{ if eq . "firing" }}Problema{{ else if eq . "resolved" }}Resolvido{{ else }}{{ . | title }}{{ end }}
+{{ end -}}
+

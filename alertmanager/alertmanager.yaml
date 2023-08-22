@@ -1,14 +1,20 @@
 global:
 
 route:
-  receiver: discord_webhook
-  group_interval: 15s
-  repeat_interval: 1m
-  group_by: ['alertname']
-  group_wait: 15s
+  receiver: calert
+  group_interval: 60s
+  repeat_interval: 24h
+  group_by: ['room', 'alertname']
+  group_wait: 30s
 
+
+    #receivers:
+    #  - name: discord_webhook
+    #    webhook_configs:
+    #    - url: http://discord-alerts:9094
+    #      send_resolved: true
 receivers:
-  - name: discord_webhook
+  - name: 'calert'
     webhook_configs:
-    - url: http://discord-alerts:9094
+    - url: 'http://calert:6000/dispatch'
       send_resolved: true
